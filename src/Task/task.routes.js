@@ -6,8 +6,8 @@ const taskController = require('./task.controller')
 const authMiddleware = require('../middleware/auth')        
 
 // Route to create a new task
-router.post('/create', authMiddleware, taskController.createTask);
-router.get('/gettasksbyprojectId/:projectId', authMiddleware, taskController.getTasksByProjectId);
+router.post('/create',  taskController.createTask);
+router.get('/gettasks/:projectId', taskController.getTasksByProjectId);
 router.patch('/update/:taskId', authMiddleware, taskController.updateTask);
 router.delete('/deletetask/:taskId', authMiddleware, taskController.deleteTask);
 

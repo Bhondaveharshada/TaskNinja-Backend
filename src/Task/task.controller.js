@@ -4,7 +4,6 @@ const Task = require('./task.model');
 exports.createTask = async (req, res) => {
   try {
     const { title, description, status, deadline, priority, createdBy, projectId, assignedTo } = req.body;
-
     const newTask = new Task({
       title,
       description,
@@ -50,9 +49,10 @@ exports.getTasksByProjectId = async (req, res) => {
   try {
     const { projectId } = req.params;
 
-    const tasks = await Task.find({
-      projectId: projectId
-    }).populate('assignedTo', 'Name email').populate('createdBy', 'Name email');
+    const tasks = await Task.find({projectId: projectId})
+    .populate('assignedTo', 'Name email')
+    .populate('createdBy', 'Name email')
+    .populate('projectId', 'name')
     if (!tasks || tasks.length === 0) {
       return res.status(404).json({ message: 'No tasks found for this project' });
     }
@@ -77,4 +77,5 @@ exports.deleteTask = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error', error });
   }
 }
+
 

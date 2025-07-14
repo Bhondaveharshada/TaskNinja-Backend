@@ -53,7 +53,7 @@ exports.getProjectsByOwner = async (req, res) => {
     }
 
     const projects = await Project.find({ owner: ownerId })
-      .populate('members') // populate only selected fields from User
+      .populate('members','Name email _id') // populate only selected fields from User
       .sort({ deadline: 1 }); // optional: sort by upcoming deadlines
 
     res.status(200).json({ projects });
@@ -74,7 +74,7 @@ exports.getProjectsByMemberId = async (req, res) => {
     }
 
     const projects = await Project.find({ members: memberId })
-      .populate('members', 'Name email') // populate owner details
+      .populate('members', 'Name email _id') // populate owner details
       .sort({ deadline: 1 }); // optional: sort by upcoming deadlines
 
     res.status(200).json({ projects });
@@ -147,4 +147,25 @@ exports.deleteProject = async (req,res) =>{
    } catch (error) {
     return res.status(500).json({ message: 'Internal Server Error', error });
    }
+}
+
+
+exports.getProjectMembers = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+
+    if (!projectId) {
+      return res.status(400).json({ message: 'Project ID is required' });
+    }
+
+    const project = await Project.findById(projectId)
+      .populate('members', 'Name email'); // populate members details 
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+    res.status(200).json({ members: project.members });
+  } catch (error) {
+    console.error('Error fetching members by project ID:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  } 
 }

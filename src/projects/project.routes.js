@@ -10,4 +10,5 @@ router.get('/getprojectsbyMemberId/:memberId', projectController.getProjectsByMe
 router.get('/getprojectbyId/:projectId', projectController.getProjectById);
 router.patch('/updateproject/:projectId', authMiddleware, projectController.updateProject);
 router.delete('/deleteproject/:projectId', authMiddleware, projectController.deleteProject);
+router.get("/getmembers/:projectId", projectController.getProjectMembers);
 module.exports = router
